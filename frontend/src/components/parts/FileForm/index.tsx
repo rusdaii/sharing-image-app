@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+import Button from '@/components/parts/Button';
 import { uploadImage } from '@/repositories/images';
 
 const FileForm = () => {
   const { register, handleSubmit } = useForm();
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
@@ -21,14 +22,10 @@ const FileForm = () => {
 
       setSelectedFileName(null);
     },
-    onError: () => {
-      setIsLoading(false);
-    },
   });
 
   const onSubmit = useCallback(
     (data: any) => {
-      setIsLoading(true);
       const formData = new FormData();
 
       formData.append('image', data.image[0]);
@@ -37,14 +34,6 @@ const FileForm = () => {
     },
     [uploadMutation]
   );
-
-  useEffect(() => {
-    if (uploadMutation.isSuccess) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(false);
-    }
-  }, [uploadMutation.isSuccess]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -98,16 +87,13 @@ const FileForm = () => {
                 <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
               </svg>
             </label>
-            <button
-              className="btn btn-block bg-indigo-500 text-white "
+            <Button
               type="submit"
+              className="w-full"
+              isLoading={uploadMutation.status === 'pending'}
             >
-              {isLoading ? (
-                <span className="loading loading-spinner loading-sm" />
-              ) : (
-                'Upload'
-              )}
-            </button>
+              Upload
+            </Button>
           </form>
         </div>
       </div>

@@ -61,9 +61,7 @@ const RegisterForm = () => {
             {...register('password', { required: true })}
           />
         </div>
-
         <div>
-          {/* <button className="btn btn-block">Login</button> */}
           <Button
             type="submit"
             className="w-full"
