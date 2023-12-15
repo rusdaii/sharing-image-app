@@ -1,0 +1,7 @@
+const STATUS = {
+  CREATED: 'CREATED',
+  ONPROGRESS: 'ONPROGRESS',
+  COMPLETED: 'COMPLETED',
+};
+
+module.exports = STATUS;
