@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+import Button from '@/components/parts/Button';
 import { registerUser } from '@/repositories/auth';
 import { AuthPayload } from '@/repositories/auth/types';
 
@@ -62,7 +63,14 @@ const RegisterForm = () => {
         </div>
 
         <div>
-          <button className="btn btn-block">Login</button>
+          {/* <button className="btn btn-block">Login</button> */}
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={registerMutation.status === 'pending'}
+          >
+            Register
+          </Button>
         </div>
       </form>
       <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">

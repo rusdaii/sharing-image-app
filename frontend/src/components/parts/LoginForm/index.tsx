@@ -9,6 +9,7 @@ import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+import Button from '@/components/parts/Button';
 import { setAccessToken } from '@/lib/cookies';
 import { login } from '@/repositories/auth';
 import { AuthPayload } from '@/repositories/auth/types';
@@ -78,7 +79,13 @@ const LoginForm = () => {
         </div>
 
         <div>
-          <button className="btn btn-block">Login</button>
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={loginMutation.status === 'pending'}
+          >
+            Login
+          </Button>
         </div>
       </form>
       <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
