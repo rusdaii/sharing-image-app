@@ -23,6 +23,7 @@ const LoginForm = () => {
     onSuccess: async ({ data }) => {
       const signInResponse = await signIn('credentials', {
         redirect: false,
+        id: data.id,
         username: data.username,
         avatarUrl: data.avatarUrl,
         accessToken: data.accessToken,

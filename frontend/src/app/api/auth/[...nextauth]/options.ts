@@ -9,14 +9,17 @@ export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
+      credentials: {},
       authorize: async (credentials) => {
-        const { username, avatarUrl, accessToken } = credentials as {
+        const { id, username, avatarUrl, accessToken } = credentials as {
+          id: string;
           username: string;
           avatarUrl: string;
           accessToken: string;
         };
 
         const user = {
+          id: id,
           username: username,
           avatarUrl: avatarUrl,
           accessToken: accessToken,

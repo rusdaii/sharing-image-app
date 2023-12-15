@@ -5,6 +5,7 @@ export type AuthPayload = {
 
 export type LoginResponse = {
   data: {
+    id: string;
     username: string;
     avatarUrl: string;
     accessToken: string;
