@@ -3,14 +3,21 @@
 import React, { useCallback, useState } from 'react';
 
 import { deleteCookie } from 'cookies-next';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ACCESS_TOKEN_KEY } from '@/constants/storageKey';
+import { User } from '@/repositories/auth/types';
 
-const Navbar = () => {
+type NavbarProps = {
+  user?: User;
+};
+
+const Navbar = ({ user }: NavbarProps) => {
   const router = useRouter();
+
+  const defaultAvatar = user?.username.split('').slice(0, 2).join('');
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -112,13 +119,12 @@ const Navbar = () => {
                   <span className="absolute -inset-1.5"></span>
                   <span className="sr-only">Open user menu</span>
 
-                  <Image
-                    src="https://res.cloudinary.com/dxqil5iuv/image/upload/v1702525971/image-sharing-app/avatars/ks9gvr5j8cwnxh4kbh1o.png"
-                    width={500}
-                    height={500}
-                    alt="avatar"
-                    className="h-8 w-8 rounded-full"
-                  />
+                  <Avatar>
+                    <AvatarImage src={user?.avatarUrl} />
+                    <AvatarFallback>
+                      {defaultAvatar?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 </button>
               </div>
 

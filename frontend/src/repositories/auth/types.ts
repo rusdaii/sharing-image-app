@@ -18,3 +18,9 @@ export type RegisterResponse = {
     password: string;
   };
 };
+
+export type User = {
+  id: string;
+  username: string;
+  avatarUrl: string;
+};

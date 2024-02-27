@@ -1,6 +1,8 @@
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+import { User } from '@/repositories/auth/types';
+
 export const options: NextAuthOptions = {
   session: {
     strategy: 'jwt',
@@ -33,5 +35,22 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
-  callbacks: {},
+  callbacks: {
+    async session({ session, token }) {
+      session.user = token.user as User;
+
+      return session;
+    },
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update' && session?.avatar) {
+        token.user.avatarUrl = session.avatar;
+      }
+
+      if (user) {
+        token.user = user as User;
+      }
+
+      return token;
+    },
+  },
 };
