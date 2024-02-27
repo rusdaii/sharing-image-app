@@ -1,7 +1,7 @@
 const app = {
-  name: 'Instacihuy',
-  description: 'Description of web application',
-  keywords: ['your', 'keywords'],
+  name: 'Snapster',
+  description: 'Share your images with people around the world',
+  keywords: ['image', 'share', 'snapster'],
 };
 
 export default app;

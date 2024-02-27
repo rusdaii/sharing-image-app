@@ -2,9 +2,9 @@ import { useCallback, useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 
 import Button from '@/components/parts/Button';
+import { toast } from '@/components/ui/use-toast';
 import { uploadImage } from '@/repositories/images';
 
 const FileForm = () => {
@@ -16,7 +16,10 @@ const FileForm = () => {
   const uploadMutation = useMutation({
     mutationFn: uploadImage,
     onSuccess: () => {
-      toast.success('Image uploaded successfully');
+      toast({
+        title: 'Success',
+        description: 'Image uploaded successfully',
+      });
 
       queryClient.invalidateQueries({ queryKey: ['images'] });
 
@@ -44,7 +47,7 @@ const FileForm = () => {
   };
 
   return (
-    <div className=" font-sans text-gray-900border-box">
+    <div className="font-sans text-gray-900 border-box">
       <div className="flex justify-center w-full mx-auto sm:max-w-lg">
         <div
           className="flex flex-col items-center justify-center w-full h-auto my-20

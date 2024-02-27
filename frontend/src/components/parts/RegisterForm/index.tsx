@@ -1,26 +1,62 @@
 'use client';
 import { useCallback } from 'react';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { useMutation } from '@tanstack/react-query';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
+import { z } from 'zod';
 
-import Button from '@/components/parts/Button';
+import playball from '@/assets/fonts/playball';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { ToastAction } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/use-toast';
+import { registerSchema } from '@/lib/zod';
 import { registerUser } from '@/repositories/auth';
 import { AuthPayload } from '@/repositories/auth/types';
 
 const RegisterForm = () => {
   const router = useRouter();
 
-  const { handleSubmit, register } = useForm<AuthPayload>();
+  const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  });
 
   const registerMutation = useMutation({
     mutationFn: registerUser,
     onSuccess: () => {
-      toast.success('Account created successfully');
-      router.push('/login');
+      toast({
+        title: 'Register Success',
+        description: 'Now you can login',
+        action: (
+          <ToastAction altText="Login" onClick={() => router.push('/login')}>
+            Login
+          </ToastAction>
+        ),
+      });
     },
   });
 
@@ -32,55 +68,65 @@ const RegisterForm = () => {
   );
 
   return (
-    <div className="w-full p-6 bg-white border-t-4 border-gray-600 rounded-md shadow-md border-top lg:max-w-lg">
-      <h1 className="text-3xl font-semibold text-center text-gray-700">
-        Register
-      </h1>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label className="label">
-            <span className="text-base label-text">Username</span>
-          </label>
-          <input
-            className="w-full input input-bordered"
-            id="username"
-            type="text"
-            placeholder="Username"
-            {...register('username', { required: true })}
-          />
-        </div>
-        <div>
-          <label className="label">
-            <span className="text-base label-text">Password</span>
-          </label>
-          <input
-            className="w-full input input-bordered"
-            id="password"
-            type="password"
-            placeholder="Enter Password"
-            {...register('password', { required: true })}
-          />
-        </div>
-        <div>
-          <Button
-            type="submit"
-            className="w-full"
-            isLoading={registerMutation.status === 'pending'}
-          >
-            Register
-          </Button>
-        </div>
-      </form>
-      <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
-        Already have an account ?{' '}
-        <Link
-          className="cursor-pointer text-primary hover:text-secondary"
-          href="/login"
-        >
-          Sign in
-        </Link>
-      </div>
-    </div>
+    <Card className="w-[400px]">
+      <CardHeader className="flex justify-center items-center">
+        <h1 className={twMerge('text-5xl font-semibold', playball.className)}>
+          Snapster
+        </h1>
+        <p className="text-gray-500 max-w-[250px] text-center font-medium">
+          Sign up to see photos from your friends
+        </p>
+      </CardHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-6">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your password"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter className="flex flex-col">
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={registerMutation.isPending}
+            >
+              {registerMutation.isPending && (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Sign Up
+            </Button>
+          </CardFooter>
+        </form>
+      </Form>
+    </Card>
   );
 };
 
